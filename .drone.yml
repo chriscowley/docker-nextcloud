@@ -1,0 +1,7 @@
+pipeline:
+  docker:
+    image: plugins/docker
+    repo: chriscowley/docker-nextcloud
+    username: chriscowley
+    secrets: [ docker_password ]
+    auto_tag: true
