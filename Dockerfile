@@ -2,7 +2,7 @@ FROM php:7.1-fpm-alpine
 MAINTAINER Chris Cowley <chris@chriscowley.me.uk>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ARG NEXTCLOUD_VERSION=13.0.2
+ARG NEXTCLOUD_VERSION=13.0.4
 ARG UID=1501
 ARG GID=1501
 
@@ -35,7 +35,7 @@ RUN set -ex \
   supervisor \
   tar \
   tini \
-  wget \
+  wget
 
 # PHP Extensions
 # https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
