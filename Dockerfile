@@ -36,8 +36,6 @@ RUN set -ex \
   tar \
   tini \
   wget \
-# PHP Extensions
-# https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-install gd exif intl mbstring mcrypt ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
