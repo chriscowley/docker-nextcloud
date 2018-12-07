@@ -2,7 +2,7 @@ FROM php:7.1-fpm-alpine
 MAINTAINER Chris Cowley <chris@chriscowley.me.uk>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-ARG NEXTCLOUD_VERSION=14.0.0
+ARG NEXTCLOUD_VERSION=14.0.4
 ARG UID=1501
 ARG GID=1501
 
@@ -36,7 +36,7 @@ RUN set -ex \
   tar \
   tini \
   wget \
-  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --enable-freetype \
   && docker-php-ext-configure ldap \
   && docker-php-ext-install gd exif intl mbstring mcrypt ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
   && pecl install APCu-5.1.8 \
