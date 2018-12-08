@@ -1,4 +1,4 @@
-FROM php:7.1-fpm-alpine
+FROM php:7.2-fpm-alpine
 MAINTAINER Chris Cowley <chris@chriscowley.me.uk>
 
 ARG NEXTCLOUD_GPG="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
@@ -38,13 +38,12 @@ RUN set -ex \
   wget \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --enable-freetype \
   && docker-php-ext-configure ldap \
-  && docker-php-ext-install gd exif intl mbstring mcrypt ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
+  && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
   && pecl install APCu-5.1.8 \
+  && pecl install mcrypt-1.0.1 \
   && pecl install memcached-3.0.2 \
   && pecl install redis-3.1.1 \
   && docker-php-ext-enable apcu redis memcached \
-
-# Remove dev packages
   && apk del \
     alpine-sdk \
     autoconf \
@@ -57,21 +56,15 @@ RUN set -ex \
     pcre-dev \
     postgresql-dev \
   && rm -rf /var/cache/apk/* \
-
-  # Add user for nextcloud
   && addgroup -g ${GID} nextcloud \
   && adduser -u ${UID} -h /opt/nextcloud -H -G nextcloud -s /sbin/nologin -D nextcloud \
   && mkdir -p /opt/nextcloud \
-
-# Download Nextcloud
   && cd /tmp \
   && NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL} \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.sha256 \
   && wget -q https://download.nextcloud.com/server/releases/${NEXTCLOUD_TARBALL}.asc \
   && wget -q https://nextcloud.com/nextcloud.asc \
-
-# Verify checksum
   && echo "Verifying both integrity and authenticity of ${NEXTCLOUD_TARBALL}..." \
   && CHECKSUM_STATE=$(echo -n $(sha256sum -c ${NEXTCLOUD_TARBALL}.sha256) | tail -c 2) \
   && if [ "${CHECKSUM_STATE}" != "OK" ]; then echo "Warning! Checksum does not match!" && exit 1; fi \
@@ -80,10 +73,7 @@ RUN set -ex \
   && if [ -z "${FINGERPRINT}" ]; then echo "Warning! Invalid GPG signature!" && exit 1; fi \
   && if [ "${FINGERPRINT}" != "${NEXTCLOUD_GPG}" ]; then echo "Warning! Wrong GPG fingerprint!" && exit 1; fi \
   && echo "All seems good, now unpacking ${NEXTCLOUD_TARBALL}..." \
-
-# Extract
   && tar xjf ${NEXTCLOUD_TARBALL} --strip-components=1 -C /opt/nextcloud \
-# Remove nextcloud updater for safety
   && rm -rf /opt/nextcloud/updater \
   && rm -rf /tmp/* /root/.gnupg
 
