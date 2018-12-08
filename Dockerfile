@@ -14,6 +14,7 @@ RUN set -ex \
   gnupg \
   icu-dev \
   icu-libs \
+  freetype-dev \
   libjpeg-turbo \
   libjpeg-turbo-dev \
   libldap \
@@ -36,7 +37,7 @@ RUN set -ex \
   tar \
   tini \
   wget \
-  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --enable-freetype \
+  && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --with-freetype-dir=/usr \
   && docker-php-ext-configure ldap \
   && docker-php-ext-install gd exif intl mbstring ldap mysqli opcache pdo_mysql pdo_pgsql pgsql zip \
   && pecl install APCu-5.1.8 \
@@ -48,6 +49,7 @@ RUN set -ex \
     alpine-sdk \
     autoconf \
     icu-dev \
+    freetype-dev \
     libmcrypt-dev \
     libmemcached-dev \
     libjpeg-turbo-dev \
